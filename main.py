@@ -33,7 +33,7 @@ def handle_msg(wcf: Wcf, msg: WxMsg):
 
 
 if __name__ == '__main__':
-    wcf = Wcf(debug=True)
+    wcf = Wcf(debug=False)
     wcf.enable_receiving_msg()
     while wcf.is_receiving_msg():
         try:
