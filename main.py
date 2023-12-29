@@ -14,6 +14,11 @@ def notify(sender, content):
     toast.show()
 
 
+def room_notify(wcf: Wcf, room_id: str):
+    room_info = wcf.query_sql("MicroMsg.db", f"select * from Contact where UserName = '{room_id}'")[0]
+    return room_info['ChatRoomNotify'] == 0
+
+
 def handle_msg(wcf: Wcf, msg: WxMsg):
     sender = msg.sender
     sender_info = wcf.get_info_by_wxid(sender)
@@ -23,7 +28,22 @@ def handle_msg(wcf: Wcf, msg: WxMsg):
     if msg.from_self():
         return
     elif msg.from_group():
-        pass
+        msg_type = msg.type
+        content = msg.content
+        print("群聊消息：[发送人：{}，消息类型：{}，内容：{}, 是否免打扰：{}]".format(sender, msg_type, content, room_notify(wcf, msg.roomid)))
+        if msg_type == 3:
+            content = "[图片]"
+        elif msg_type == 1:
+            content = msg.content
+        elif msg_type == 49:
+            data = et.fromstring(msg.content)
+            content = data[0][0].text
+
+        # 群聊信息
+        room_info = wcf.get_info_by_wxid(msg.roomid)
+
+
+        notify(room_info["name"], f'{name}: {content}')
     else:
         msg_type = msg.type
         if msg_type == 3:
@@ -33,6 +53,11 @@ def handle_msg(wcf: Wcf, msg: WxMsg):
         elif msg_type == 49:
             data = et.fromstring(msg.content)
             content = data[0][0].text
+        elif msg_type == 47:
+            content = "[表情]"
+        elif msg_type == 43:
+            content = "[视频]"
+        print("收到消息：[发送人：{}，消息类型：{}，内容：{}]".format(sender, msg_type, msg.content))
 
         notify(name, content)
 
@@ -61,7 +86,6 @@ icon = Icon("name", image, "WxNotify", menu)
 
 
 if __name__ == '__main__':
-    Thread(target=icon.run, daemon=False).start()
-    Thread(target=handle_start, daemon=True).start()
+    handle_start()
 
 
