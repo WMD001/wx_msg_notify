@@ -1,55 +1,18 @@
-### 打包问题
+### wx_msg_notify
 
-使用 `pyinstaller` 进行打包
+基于 [WeChatFerry](https://github.com/lich0821/WeChatFerry) 实现windows平台的微信消息提醒
+
+适用于微信3.9.2.23，下载地址在 [这里](https://github.com/lich0821/WeChatFerry/releases/latest)；也可以从 [WeChatSetup](https://gitee.com/lch0821/WeChatSetup) 找到。
+
+
+
+### 打包
+
+目前使用 `pyinstaller` 进行打包
 
 ```shell
-pyinstaller main.py -i notify.ico -n notify --hidden-import=_cffi_backend
+pyinstaller main.py -i notify.ico -n notify --hidden-import=_cffi_backend -w -y --add-data wcferry:wcferry
 ```
 
-打包后需要将 `wcf.exe` 和 `_cffi_backend.cp39-win_amd64.pyd` 文件手动放在 dist/_internal/wcferry 下，exe文件才可以正常启动
+> 打包后将`wx.ico`和`notify.png`放在打包后的dist下notify目录下
 
-Msg_types
-
-```json
-{
-  "status": 0,
-  "message": "成功",
-  "data": {
-    "types": {
-      "0": "朋友圈消息",
-      "1": "文字",
-      "3": "图片",
-      "34": "语音",
-      "37": "好友确认",
-      "40": "POSSIBLEFRIEND_MSG",
-      "42": "名片",
-      "43": "视频",
-      "47": "石头剪刀布 | 表情图片",
-      "48": "位置",
-      "49": "共享实时位置、文件、转账、链接",
-      "50": "VOIPMSG",
-      "51": "微信初始化",
-      "52": "VOIPNOTIFY",
-      "53": "VOIPINVITE",
-      "62": "小视频",
-      "66": "微信红包",
-      "9999": "SYSNOTICE",
-      "10000": "红包、系统消息",
-      "10002": "撤回消息",
-      "1048625": "搜狗表情",
-      "16777265": "链接",
-      "436207665": "微信红包",
-      "536936497": "红包封面",
-      "754974769": "视频号视频",
-      "771751985": "视频号名片",
-      "822083633": "引用消息",
-      "922746929": "拍一拍",
-      "973078577": "视频号直播",
-      "974127153": "商品链接",
-      "975175729": "视频号直播",
-      "1040187441": "音乐链接",
-      "1090519089": "文件"
-    }
-  }
-}
-```
