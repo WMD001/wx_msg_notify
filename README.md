@@ -17,9 +17,21 @@
 
 目前使用 `pyinstaller` 进行打包
 
+
 ```shell
+# 生成spec文件
 pyinstaller main.py -i assets/notify.ico -n notify --hidden-import=_cffi_backend -w -y --add-data assets:assets
+
+# 指定spec文件， 通过脚本复制文件
+pyinstaller notify.spec
 ```
 
-> 打包后将`wx.ico`和`notify.png`放在打包后的dist下notify目录下
+```shell
+pyinstaller main.py -i assets/notify.ico -n notify --hidden-import=_cffi_backend -w -y --add-data assets:assets
+
+
+pyinstaller notify.spec
+```
+
+
 
