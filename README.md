@@ -18,7 +18,7 @@
 目前使用 `pyinstaller` 进行打包
 
 ```shell
-pyinstaller main.py -i notify.ico -n notify --hidden-import=_cffi_backend -w -y --add-data wcferry:wcferry
+pyinstaller main.py -i assets/notify.ico -n notify --hidden-import=_cffi_backend -w -y --add-data assets:assets
 ```
 
 > 打包后将`wx.ico`和`notify.png`放在打包后的dist下notify目录下

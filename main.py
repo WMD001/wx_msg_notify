@@ -4,7 +4,8 @@ from pystray import Icon, Menu, MenuItem
 from PIL import Image
 from threading import Thread
 
-from wx_notify import WxNotify
+from notify.wx_notify import WxNotify
+from notify.log import logger
 
 
 class StayBackend:
@@ -12,7 +13,7 @@ class StayBackend:
     def __init__(self):
         self.icon = None
         self.menu = None
-        self.image = Image.open("notify.png")
+        self.image = Image.open("assets/notify.png")
 
     def set_menu(self, menu):
         self.menu = menu
@@ -31,12 +32,30 @@ def close_stay():
     sys.exit(-1)
 
 
+def open_mask():
+    WxNotify.set_private()
+
+
+def close_mask():
+    WxNotify.set_public()
+
+
 if __name__ == '__main__':
     stay_backend = StayBackend()
-    stay_backend.set_menu((Menu.SEPARATOR, MenuItem('退出', close_stay)))
+
+    menu = (
+        Menu.SEPARATOR,
+        MenuItem('模糊', open_mask, enabled=not WxNotify.mask),
+        MenuItem('清楚', close_mask, enabled=WxNotify.mask),
+
+        MenuItem('退出', close_stay)
+    )
+
+    stay_backend.set_menu(menu)
     notify = WxNotify()
     backend_stay_thread = Thread(target=stay_backend.run)
     backend_stay_thread.start()
     notify.start()
+    logger.debug("启动成功")
 
 
