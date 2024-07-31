@@ -99,6 +99,7 @@ class WxNotify:
 
         Thread(target=process_msg, name="GetMessage", args=(self.wcf,), daemon=True).start()
         logger.info('开始监听消息')
+        notify("", "Wx_Notify 已启动")
 
     def close(self):
         """
