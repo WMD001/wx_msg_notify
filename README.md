@@ -2,7 +2,7 @@
 
 基于 [WeChatFerry](https://github.com/lich0821/WeChatFerry) 实现windows平台的微信消息提醒
 
-适用于微信3.9.2.23，下载地址在 [这里](https://github.com/lich0821/WeChatFerry/releases/latest)；也可以从 [WeChatSetup](https://gitee.com/lch0821/WeChatSetup) 找到。
+适用于微信3.9.10.27，下载地址在 [这里](https://github.com/lich0821/WeChatFerry/releases/latest)；也可以从 [WeChatSetup](https://gitee.com/lch0821/WeChatSetup) 找到。
 
 
 ### 依赖
@@ -39,7 +39,7 @@ pyinstaller notify.spec
 
 - [x] 文本消息
 - [x] 图片消息
-- [ ] 视频消息
+- [x] 视频消息
 - [ ] 链接消息
 - [ ] 文件消息
 - [x] 语音消息
@@ -54,5 +54,5 @@ pyinstaller notify.spec
 - [ ] 邀请入群消息
 - [ ] 好友添加成功消息
 - [x] 群消息通知
-- [ ] 公众号消息通知
-- [ ] 隐私模式
+- [x] 公众号消息通知
+- [x] 隐私模式

@@ -126,16 +126,17 @@ class WxNotify:
         sender = msg.sender
         sender_name = self.get_sender_name(sender)
 
-        # 是否允许发送通知
-        # if not self.enable_notify(sender):
-        #     return
-
         # 获取发送内容
         content = get_msg_content(msg)
 
         if msg.from_group():
+            # 是否免打扰 TODO 判断免打扰有误
+            # if self.enable_notify(sender):
+            #     return
+            content = f"{sender_name}: {content}"
+            room_name = self.get_sender_name(msg.roomid)
             # 发送消息提醒
-            notify(sender_name, content, "微信群组消息")
+            notify(room_name, content, "微信群组消息")
         elif sender.startswith('gh'):
             # 公众号消息
             notify(sender_name, content, "微信公众号消息")

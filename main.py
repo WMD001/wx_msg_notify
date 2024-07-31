@@ -32,12 +32,13 @@ def close_stay():
     sys.exit(-1)
 
 
-def open_mask():
-    WxNotify.set_private()
-
-
-def close_mask():
-    WxNotify.set_public()
+def check_mask(icon, item):
+    if not item.checked:
+        WxNotify.set_private()
+        logger.info("已进入隐私模式")
+    else:
+        WxNotify.set_public()
+        logger.info("已退出隐私模式")
 
 
 if __name__ == '__main__':
@@ -45,9 +46,7 @@ if __name__ == '__main__':
 
     menu = (
         Menu.SEPARATOR,
-        MenuItem('模糊', open_mask, enabled=not WxNotify.mask),
-        MenuItem('清楚', close_mask, enabled=WxNotify.mask),
-
+        MenuItem('隐私模式', check_mask, checked=lambda item: WxNotify.mask),
         MenuItem('退出', close_stay)
     )
 
