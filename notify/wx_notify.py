@@ -131,9 +131,9 @@ class WxNotify:
         content = get_msg_content(msg)
 
         if msg.from_group():
-            # 是否免打扰 TODO 判断免打扰有误
-            # if self.enable_notify(sender):
-            #     return
+            # 免打扰
+            if not self.enable_room_notify(msg.roomid):
+                return
             content = f"{sender_name}: {content}"
             room_name = self.get_sender_name(msg.roomid)
             # 发送消息提醒
@@ -142,6 +142,8 @@ class WxNotify:
             # 公众号消息
             notify(sender_name, content, "微信公众号消息")
         else:
+            if not self.enable_person_notify(sender):
+                return
             # 个人消息
             notify(sender_name, content)
 
@@ -158,14 +160,23 @@ class WxNotify:
             elif sender_info['name']:
                 return sender_info['name']
 
-    def enable_notify(self, username: str):
+    def enable_room_notify(self, roomid: str):
+        """
+        是否免打扰
+        :param username: username
+        :return: True 免打扰 / False 正常
+        """
+        contact_info = self.wcf.query_sql("MicroMsg.db", f"select * from Contact where UserName = '{roomid}'")[0]
+        return contact_info['ChatRoomNotify'] == 1
+
+    def enable_person_notify(self, username: str):
         """
         是否免打扰
         :param username: username
         :return: True 免打扰 / False 正常
         """
         contact_info = self.wcf.query_sql("MicroMsg.db", f"select * from Contact where UserName = '{username}'")[0]
-        return contact_info['ChatRoomNotify'] == 1
+        return contact_info['Type'] != 515
 
     @staticmethod
     def set_private():
