@@ -26,14 +26,6 @@ pyinstaller main.py -i assets/notify.ico -n notify --hidden-import=_cffi_backend
 pyinstaller notify.spec
 ```
 
-```shell
-pyinstaller main.py -i assets/notify.ico -n notify --hidden-import=_cffi_backend -w -y --add-data assets:assets
-
-
-pyinstaller notify.spec
-```
-
-
 
 ### Feature
 
