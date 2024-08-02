@@ -155,3 +155,4 @@ cython_debug/
 # 自定义添加
 *.lock
 logs
+/test/

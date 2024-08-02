@@ -1,5 +1,4 @@
 import os.path
-import sys
 from queue import Empty
 from threading import Thread
 from xml.etree import ElementTree as ET
@@ -51,7 +50,8 @@ def notify(sender, content, app_id='微信消息'):
     :param content: 消息内容
     :return:
     """
-    toast = Notification(app_id=app_id, title=sender, msg=content, icon=os.path.join(os.getcwd(), "assets/wx.ico"))
+    logger.info("发送[{}]通知: {}, 来自: {}".format(app_id, content, sender))
+    toast = Notification(app_id=app_id, title=sender, msg=r"{}".format(content), icon=os.path.join(os.getcwd(), "assets/wx.ico"))
     toast.show()
 
 
@@ -75,8 +75,9 @@ class WxNotify:
         }
         :return:
         """
-        self.wcf.get_contacts()
-        for contact in self.wcf.contacts:
+        contacts = self.wcf.query_sql("MicroMsg.db",
+                                 "select UserName as wxid, Alias as code, Remark as remark, NickName as name from Contact")
+        for contact in contacts:
             self.contacts[contact['wxid']] = contact
 
     def start(self) -> None:
@@ -133,6 +134,7 @@ class WxNotify:
         if msg.from_group():
             # 免打扰
             if not self.enable_room_notify(msg.roomid):
+                logger.info("群组已免打扰[{}]".format(msg.roomid))
                 return
             content = f"{sender_name}: {content}"
             room_name = self.get_sender_name(msg.roomid)
@@ -143,6 +145,7 @@ class WxNotify:
             notify(sender_name, content, "微信公众号消息")
         else:
             if not self.enable_person_notify(sender):
+                logger.info("好友已免打扰[{}]".format(sender))
                 return
             # 个人消息
             notify(sender_name, content)
@@ -163,7 +166,7 @@ class WxNotify:
     def enable_room_notify(self, roomid: str):
         """
         是否免打扰
-        :param username: username
+        :param roomid: roomid
         :return: True 免打扰 / False 正常
         """
         contact_info = self.wcf.query_sql("MicroMsg.db", f"select * from Contact where UserName = '{roomid}'")[0]

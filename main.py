@@ -27,9 +27,13 @@ class StayBackend:
 
 
 def close_stay():
-    notify.close()
-    stay_backend.stop()
-    sys.exit(-1)
+    try:
+        notify.close()
+        stay_backend.stop()
+        sys.exit(0)
+    except Exception as e:
+        logger.error(e)
+        sys.exit(1)
 
 
 def check_mask(icon, item):
