@@ -51,6 +51,8 @@ def notify(sender, content, app_id='微信消息'):
     :return:
     """
     logger.info("发送[{}]通知: {}, 来自: {}".format(app_id, content, sender))
+    if WxNotify.mask:
+        content = "发来一条微信消息"
     toast = Notification(app_id=app_id, title=sender, msg=r"{}".format(content), icon=os.path.join(os.getcwd(), "assets/wx.ico"))
     toast.show()
 
@@ -118,10 +120,6 @@ class WxNotify:
 
         # 忽略自己发送的消息
         if msg.from_self():
-            return
-
-        if WxNotify.mask:
-            notify("", "收到一条微信消息")
             return
 
         # 获取发送人
