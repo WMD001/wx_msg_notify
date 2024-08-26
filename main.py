@@ -45,11 +45,19 @@ def check_mask(icon, item):
         logger.info("已退出隐私模式")
 
 
+def enable_gh(icon, item):
+    if item.checked:
+        WxNotify.enable_gh = False
+    else:
+        WxNotify.enable_gh = True
+
+
 if __name__ == '__main__':
     stay_backend = StayBackend()
 
     menu = (
         Menu.SEPARATOR,
+        MenuItem('公众号消息', enable_gh, checked=lambda item: WxNotify.enable_gh),
         MenuItem('隐私模式', check_mask, checked=lambda item: WxNotify.mask),
         MenuItem('退出', close_stay)
     )

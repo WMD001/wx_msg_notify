@@ -59,6 +59,7 @@ def notify(sender, content, app_id='微信消息'):
 
 class WxNotify:
     mask = False
+    enable_gh = True
 
     def __init__(self):
         self.wcf = Wcf(debug=False)
@@ -124,6 +125,7 @@ class WxNotify:
 
         # 获取发送人
         sender = msg.sender
+
         sender_name = self.get_sender_name(sender)
 
         # 获取发送内容
@@ -139,6 +141,9 @@ class WxNotify:
             # 发送消息提醒
             notify(room_name, content, "微信群组消息")
         elif sender.startswith('gh'):
+            if not WxNotify.enable_gh:
+                logger.info("公众号已免打扰[{}]".format(sender))
+                return
             # 公众号消息
             notify(sender_name, content, "微信公众号消息")
         else:
