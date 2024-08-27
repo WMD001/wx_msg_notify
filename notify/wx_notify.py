@@ -36,8 +36,34 @@ def get_msg_content(msg: WxMsg) -> str:
     elif msg_type == 47:
         content = "[表情]"
     elif msg_type == 49:
-        data = ET.fromstring(msg.content)
-        content = data[0][0].text
+        msg_data = ET.fromstring(msg.content)
+        for child in msg_data:
+            if child.tag == 'appmsg':
+                msg_title = None
+                msg_des = None
+                msg_type = None
+                for c in child:
+                    if c.tag == 'type':
+                        msg_type = c.text
+                    if c.tag == 'title':
+                        msg_title = c.text
+                    if c.tag == 'des':
+                        msg_des = c.text
+                if msg_type == '2000':
+                    # 转账
+                    return msg_des
+                if msg_type == '17':
+                    return '发起了位置共享'
+                if msg_type == '6':
+                    # 文件
+                    return '[文件]' + msg_title
+                if msg_type == '5':
+                    # 链接
+                    return '[链接]' + msg_title
+    elif msg_type == 10000:
+        return msg.content
+    else:
+        return msg.content
 
     return content
 
@@ -53,7 +79,8 @@ def notify(sender, content, app_id='微信消息'):
     logger.info("发送[{}]通知: {}, 来自: {}".format(app_id, content, sender))
     if WxNotify.mask:
         content = "发来一条微信消息"
-    toast = Notification(app_id=app_id, title=sender, msg=r"{}".format(content), icon=os.path.join(os.getcwd(), "assets/wx.ico"))
+    toast = Notification(app_id=app_id, title=sender, msg=r"{}".format(content),
+                         icon=os.path.join(os.getcwd(), "assets/wx.ico"))
     toast.show()
 
 
@@ -79,7 +106,7 @@ class WxNotify:
         :return:
         """
         contacts = self.wcf.query_sql("MicroMsg.db",
-                                 "select UserName as wxid, Alias as code, Remark as remark, NickName as name from Contact")
+                                      "select UserName as wxid, Alias as code, Remark as remark, NickName as name from Contact")
         for contact in contacts:
             self.contacts[contact['wxid']] = contact
 
@@ -127,6 +154,10 @@ class WxNotify:
         sender = msg.sender
 
         sender_name = self.get_sender_name(sender)
+        if sender_name is None:
+            # 如果联系人中没有发送人，重新加载联系人列表
+            self.init_contacts()
+            sender_name = self.get_sender_name(sender)
 
         # 获取发送内容
         content = get_msg_content(msg)
