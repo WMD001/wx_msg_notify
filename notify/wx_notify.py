@@ -60,6 +60,10 @@ def get_msg_content(msg: WxMsg) -> str:
                 if msg_type == '5':
                     # 链接
                     return '[链接]' + msg_title
+                if msg_type == '57':
+                    # 引用消息
+                    return msg_title
+                return msg_title
     elif msg_type == 10000:
         return msg.content
     else:
