@@ -90,7 +90,7 @@ def notify(sender, content, app_id='微信消息'):
 
 class WxNotify:
     mask = False
-    enable_gh = True
+    enable_gh = False
 
     def __init__(self):
         self.wcf = Wcf(debug=False)
