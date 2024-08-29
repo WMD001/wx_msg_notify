@@ -52,6 +52,9 @@ def get_msg_content(msg: WxMsg) -> str:
                 if msg_type == '2000':
                     # 转账
                     return msg_des
+                if msg_type == '19':
+                    # 聊天记录
+                    return '[{}]'.format(msg_title)
                 if msg_type == '17':
                     return '发起了位置共享'
                 if msg_type == '6':
