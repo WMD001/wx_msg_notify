@@ -75,7 +75,7 @@ def get_msg_content(msg: WxMsg) -> str:
     return content
 
 
-def notify(sender, content, app_id='微信消息'):
+def notify(sender, content, app_id='WeChat_Notify'):
     """
     发送通知到 windows 通知中心
     :param app_id: 消息标题
@@ -177,13 +177,13 @@ class WxNotify:
             content = f"{sender_name}: {content}"
             room_name = self.get_sender_name(msg.roomid)
             # 发送消息提醒
-            notify(room_name, content, "微信群组消息")
+            notify(room_name, content)
         elif sender.startswith('gh'):
             if not WxNotify.enable_gh:
                 logger.info("公众号已免打扰[{}]".format(sender))
                 return
             # 公众号消息
-            notify(sender_name, content, "微信公众号消息")
+            notify(sender_name, content)
         else:
             if not self.enable_person_notify(sender):
                 logger.info("好友已免打扰[{}]".format(sender))
